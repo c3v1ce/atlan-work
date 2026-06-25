@@ -50,6 +50,23 @@ def update_db(user_id, username, field, value):
 def is_creator(message: Message) -> bool:
     return message.from_user.id == CREATOR_ID
 
+@dp.message(Command("help"))
+async def show_help(message: Message):
+    help_text = (
+        f"📖 **Справка по командам Atlan RP**\n"
+        f"━━━━━━━━━━━━━━━━━━━━\n"
+        f"👑 **Для Создателя (управление):**\n"
+        f"• `/coin [число]` — выдать A-Coins администратору\n"
+        f"• `/take [число]` — забрать A-Coins у администратора\n"
+        f"• `/awarn` — выдать 1 выговор A-Warn (макс. 5)\n"
+        f"• `/unawarn` — снять 1 выговор A-Warn (мин. 0)\n"
+        f"📌 *Все команды выше работают строго в ответ (реплай) на сообщение нужного админа.*\n\n"
+        f"👤 **Для всех администраторов:**\n"
+        f"• `/profile` или `/stats` — посмотреть свою статистику (баланс и варны). Если отправить реплаем на чужое сообщение, покажет профиль этого администратора.\n"
+        f"• `/help` — вызвать это меню."
+    )
+    await message.reply(help_text, parse_mode="Markdown")
+
 @dp.message(Command("coin"))
 async def add_coins(message: Message, command: CommandObject):
     if not is_creator(message):
