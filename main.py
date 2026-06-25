@@ -121,4 +121,33 @@ async def remove_warn(message: Message):
     username = f"@{target_user.username}" if target_user.username else target_user.full_name
     
     coins, current_warns = get_or_create_user(target_user.id, username)
-    new_warns = max(0,
+    new_warns = max(0, current_warns - 1)
+    update_db(target_user.id, username, "warns", new_warns)
+    
+    await message.reply(f"✅ С администратора {username} снят A-Warn. Всего: {new_warns}/5.")
+
+@dp.message(Command("profile", "stats"))
+async def show_profile(message: Message):
+    if message.reply_to_message:
+        target_user = message.reply_to_message.from_user
+    else:
+        target_user = message.from_user
+
+    username = f"@{target_user.username}" if target_user.username else target_user.full_name
+    coins, warns = get_or_create_user(target_user.id, username)
+
+    profile_text = (
+        f"👤 **Профиль администратора {username}**\n"
+        f"━━━━━━━━━━━━━━━━━━━━\n"
+        f"💰 Баланс: `{coins}` A-Coins\n"
+        f"⚠️ Выговоры: `{warns}/5` A-Warn\n"
+    )
+    
+    await message.reply(profile_text, parse_mode="Markdown")
+
+async def main():
+    init_db()
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
