@@ -121,14 +121,4 @@ async def remove_warn(message: Message):
     username = f"@{target_user.username}" if target_user.username else target_user.full_name
     
     coins, current_warns = get_or_create_user(target_user.id, username)
-    new_warns = max(0, current_warns - 1)
-    update_db(target_user.id, username, "warns", new_warns)
-    
-    await message.reply(f"✅ С администратора {username} снят A-Warn. Всего: {new_warns}/5.")
-
-async def main():
-    init_db()
-    await dp.start_polling(bot)
-
-if __name__ == "__main__":
-    asyncio.run(main())
+    new_warns = max(0,
